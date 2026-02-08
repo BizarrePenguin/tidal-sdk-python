@@ -5,8 +5,13 @@ TIDAL SDK design concept from the official [TIDAL SDK repository](https://github
 
 ## Installation
 
-Clone the repo.
+1. Clone the repo.
+
+2. Install [uv](https://docs.astral.sh/uv/)
+
+3. Set up the dev environment
 
 ```bash
-pip install -e .
+uv venv
+make install-dev
 ```
