@@ -4,6 +4,7 @@ This module will load `tests/.env` if present and inject variables into
 `os.environ` but will NOT override any environment variables that are
 already set (so CI-provided secrets take precedence).
 """
+
 from __future__ import annotations
 
 import os

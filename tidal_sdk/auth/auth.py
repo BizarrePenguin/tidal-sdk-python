@@ -3,12 +3,12 @@
 This is a small, implementation-focused subset intended to allow integration
 tests to exercise real TIDAL authentication using client id/secret.
 """
+
 from __future__ import annotations
 
+import os
 from dataclasses import dataclass
 from datetime import datetime, timedelta
-import os
-from typing import Optional
 
 import httpx
 
@@ -40,9 +40,9 @@ class Auth:
 
     def __init__(
         self,
-        client_id: Optional[str] = None,
-        client_secret: Optional[str] = None,
-        token_url: Optional[str] = None,
+        client_id: str | None = None,
+        client_secret: str | None = None,
+        token_url: str | None = None,
         timeout: float = 10.0,
     ) -> None:
         self.client_id = client_id or os.getenv("TIDAL_CLIENT_ID")
@@ -54,7 +54,7 @@ class Auth:
 
         self.token_url = token_url or os.getenv("TIDAL_TOKEN_URL") or self.DEFAULT_TOKEN_URL
         self._timeout = timeout
-        self._cached: Optional[_TokenData] = None
+        self._cached: _TokenData | None = None
 
     def _is_token_valid(self) -> bool:
         if not self._cached:
@@ -66,7 +66,7 @@ class Auth:
 
         Caches the token until close to expiration.
         """
-        if self._is_token_valid():
+        if self._cached and self._is_token_valid():
             return AccessToken(
                 token=self._cached.token,
                 expires_at=self._cached.expires_at,
@@ -84,7 +84,7 @@ class Auth:
 
                 resp = client.post(self.token_url, data=data, headers=headers)
         except httpx.RequestError as exc:  # network problems
-            raise NetworkError(str(exc))
+            raise NetworkError(str(exc)) from exc
 
         if resp.status_code != 200:
             raise NetworkError(f"token endpoint returned status {resp.status_code}")
