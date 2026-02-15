@@ -144,6 +144,9 @@ ENV/
 env.bak/
 venv.bak/
 
+# Ignore local test env file
+tests/.env
+
 # Spyder project settings
 .spyderproject
 .spyproject
