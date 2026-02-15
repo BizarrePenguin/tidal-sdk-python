@@ -37,6 +37,9 @@ jobs:
         run: make type-check
 
       - name: Run tests with coverage
+        env:
+          TIDAL_CLIENT_ID: ${{ secrets.TIDAL_CLIENT_ID }}
+          TIDAL_CLIENT_SECRET: ${{ secrets.TIDAL_CLIENT_SECRET }}
         run: make test-cov
 
       # - name: Upload coverage to Codecov
